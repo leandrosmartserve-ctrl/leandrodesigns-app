@@ -1,0 +1,9 @@
+// Configure somente os dígitos com DDI e DDD, por exemplo 5511999999999.
+const WHATSAPP_NUMBER = '5511921258288';
+function navigate(id){document.querySelectorAll('.page').forEach(el=>el.classList.toggle('active',el.id===id));document.querySelectorAll('[data-page]').forEach(el=>el.classList.toggle('active',el.dataset.page===id));window.scrollTo(0,0);}
+document.querySelectorAll('[data-page]').forEach(el=>el.addEventListener('click',()=>navigate(el.dataset.page)));
+document.querySelectorAll('[data-go]').forEach(el=>el.addEventListener('click',()=>navigate(el.dataset.go)));
+document.querySelectorAll('[data-filter]').forEach(el=>el.addEventListener('click',()=>{document.querySelectorAll('[data-filter]').forEach(b=>b.classList.toggle('active',b===el));document.querySelectorAll('#works [data-cat]').forEach(card=>card.hidden=el.dataset.filter!=='todos'&&card.dataset.cat!==el.dataset.filter)}));
+document.getElementById('year').textContent=new Date().getFullYear();
+document.getElementById('quote').addEventListener('submit',event=>{event.preventDefault();const f=new FormData(event.currentTarget);const message=`Olá! Gostaria de solicitar um orçamento na LeandroDesigns.\n\nNome: ${f.get('nome')}\nServiço: ${f.get('servico')}\nPrazo: ${f.get('prazo')||'A combinar'}\nDetalhes: ${f.get('detalhes')}`;const status=document.getElementById('quote-status');if(!/^\d{12,15}$/.test(WHATSAPP_NUMBER)){status.textContent='Configure primeiro o número do WhatsApp no arquivo app.js. Mensagem pronta para copiar.';navigator.clipboard?.writeText(message).catch(()=>{});return;}status.textContent='O WhatsApp será aberto com a mensagem preenchida. Confirme o envio por lá.';window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`,'_blank','noopener,noreferrer');});
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}
